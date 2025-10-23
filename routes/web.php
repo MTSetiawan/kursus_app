@@ -73,7 +73,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('plans', AdminPlanController::class)->except(['show']);
 });
 
-
-Route::get('/')->name('landing');
+Route::get('/', function () {
+    return ('welcome');
+});
 
 require __DIR__ . '/auth.php';

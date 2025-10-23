@@ -33,10 +33,10 @@
                 class="block px-3 py-2 rounded hover:bg-blue-50 {{ request()->is('admin/listings*') ? 'bg-blue-100 font-semibold' : '' }}">
                 📚 Listing
             </a>
-            <a href="{{ route('admin.users') }}"
+            {{-- <a href="{{ route('admin.users') }}"
                 class="block px-3 py-2 rounded hover:bg-blue-50 {{ request()->is('admin/users*') ? 'bg-blue-100 font-semibold' : '' }}">
                 👤 Pengguna
-            </a>
+            </a> --}}
         </nav>
 
         <div class="px-4 py-4 border-t">

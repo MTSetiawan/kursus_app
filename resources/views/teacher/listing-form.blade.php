@@ -19,28 +19,60 @@
             <div class="text-red" style="margin:.25rem 0">{{ $message }}</div>
         @enderror
 
-        <div class="grid grid-2">
-            <div>
-                <label>Mata Pelajaran (category)</label>
-                <input class="input" name="category" value="{{ old('category', $listing->category) }}">
-                @error('category')
-                    <div class="text-red" style="margin:.25rem 0">{{ $message }}</div>
-                @enderror
-            </div>
+        <div>
+            <label>Mata Pelajaran (category)</label>
+            <select class="select" name="category">
+                <option value="" disabled selected>-- Pilih Kategori --</option>
+                <option value="Microsoft Office" @selected(old('category', $listing->category) === 'Microsoft Office')>
+                    Microsoft Office
+                </option>
+                <option value="Desain Grafis" @selected(old('category', $listing->category) === 'Desain Grafis')>
+                    Desain Grafis
+                </option>
+                <option value="Pemrograman Dasar" @selected(old('category', $listing->category) === 'Pemrograman Dasar')>
+                    Pemrograman Dasar
+                </option>
+                <option value="Web Development" @selected(old('category', $listing->category) === 'Web Development')>
+                    Web Development
+                </option>
+                <option value="Database" @selected(old('category', $listing->category) === 'Database')>
+                    Database
+                </option>
+                <option value="Jaringan Komputer" @selected(old('category', $listing->category) === 'Jaringan Komputer')>
+                    Jaringan Komputer
+                </option>
+                <option value="Editing Video" @selected(old('category', $listing->category) === 'Editing Video')>
+                    Editing Video
+                </option>
+                <option value="UI/UX Design" @selected(old('category', $listing->category) === 'UI/UX Design')>
+                    UI/UX Design
+                </option>
+                <option value="IT Support" @selected(old('category', $listing->category) === 'IT Support')>
+                    IT Support
+                </option>
+                <option value="Lainnya" @selected(old('category', $listing->category) === 'Lainnya')>
+                    Lainnya
+                </option>
+            </select>
+            @error('category')
+                <div class="text-red" style="margin:.25rem 0">{{ $message }}</div>
+            @enderror
+        </div>
 
-            <div>
-                <label>Kecamatan (region)</label>
-                <select name="region_id" class="select">
-                    @foreach ($regions as $r)
-                        <option value="{{ $r->id }}" @selected((int) old('region_id', (int) $listing->region_id) === (int) $r->id)>
-                            {{ $r->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('region_id')
-                    <div class="text-red" style="margin:.25rem 0">{{ $message }}</div>
-                @enderror
-            </div>
+
+        <div>
+            <label>Kecamatan (region)</label>
+            <select name="region_id" class="select">
+                @foreach ($regions as $r)
+                    <option value="{{ $r->id }}" @selected((int) old('region_id', (int) $listing->region_id) === (int) $r->id)>
+                        {{ $r->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('region_id')
+                <div class="text-red" style="margin:.25rem 0">{{ $message }}</div>
+            @enderror
+        </div>
         </div>
 
         <div class="grid grid-2">
