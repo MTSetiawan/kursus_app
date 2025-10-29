@@ -11,11 +11,9 @@
     {{-- ===== HEADER / NAVBAR ===== --}}
     <header class="sticky top-0 bg-white border-b shadow-sm z-40">
         <div class="container mx-auto flex items-center justify-between py-3 px-4">
-            <p class="text-xl font-semibold text-indigo-600">Teacher</p>
+            <a href="{{ route('teacher.dashboard') }}" class="text-xl font-semibold text-indigo-600">Teacher</a>
 
             <div class="flex items-center gap-3 relative">
-                {{-- (Removed + New Listing button here) --}}
-
                 @php
                     $user = auth()->guard('web')->user();
                     $profile = $user?->teacherProfile;
@@ -82,8 +80,6 @@
         </div>
     </div>
 
-    {{-- ===== UPGRADE MODAL (used by plan banner) ===== --}}
-
     {{-- ===== JS (Modal + Dropdown) ===== --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -93,6 +89,7 @@
                 const m = qs('#' + id);
                 if (m) {
                     m.removeAttribute('hidden');
+                    m.removeAttribute('aria-hidden');
                     document.body.style.overflow = 'hidden';
                 }
             };
@@ -100,6 +97,7 @@
                 const m = qs('#' + id);
                 if (m) {
                     m.setAttribute('hidden', '');
+                    m.setAttribute('aria-hidden', 'true');
                     document.body.style.overflow = '';
                 }
             };
@@ -191,6 +189,8 @@
             }
         });
     </script>
+
+    @yield('scripts')
 
     {{-- ===== Basic styling tweaks ===== --}}
     <style>

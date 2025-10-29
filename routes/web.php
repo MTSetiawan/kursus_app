@@ -49,12 +49,12 @@ Route::get('/go/wa/{listing}', function (Listing $listing) {
 Route::middleware('auth')->group(function () {
     Route::get('/teacher', [ListingController::class, 'index'])->name('teacher.dashboard');
     Route::get('/teacher/profile', [TeacherProfileController::class, 'edit'])->name('teacher.profile.edit');
+    Route::get('/teacher/profile/show', [TeacherProfileController::class, 'show'])->name('teacher.profile'); // ← ADD THIS
     Route::post('/teacher/profile', [TeacherProfileController::class, 'store'])->name('teacher.profile.store');
     Route::put('/teacher/profile',  [TeacherProfileController::class, 'update'])->name('teacher.profile.update');
 
     Route::resource('listings', ListingController::class);
 });
-
 Route::middleware('auth')->group(function () {
     Route::get('/plans/{plan}/wa', [PlanController::class, 'wa'])->name('plans.wa');
     Route::post('/plan-requests', [PlanRequestController::class, 'store'])->name('plan-requests.store');
