@@ -37,6 +37,10 @@
                 class="block px-3 py-2 rounded hover:bg-blue-50 {{ request()->is('admin/users*') ? 'bg-blue-100 font-semibold' : '' }}">
                 👤 Pengguna
             </a> --}}
+            <a href="{{ route('admin.teacher-plans.index') }}"
+                class="block px-3 py-2 rounded hover:bg-blue-50 {{ request()->is('admin/teacher-plans*') ? 'bg-blue-100 font-semibold' : '' }}">
+                🧑‍🏫 Teacher Plans
+</a>
         </nav>
 
         <div class="px-4 py-4 border-t">

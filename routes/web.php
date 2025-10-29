@@ -10,6 +10,7 @@ use App\Http\Controllers\PlanRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicListingController;
 use App\Http\Controllers\TeacherProfileController;
+use App\Http\Controllers\AdminTeacherController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Listing; // ⬅️ add this
 use App\Models\PlanRequest;
@@ -71,6 +72,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/plan-requests/{req}/reject', [AdminPlanRequest::class, 'reject'])->name('plan-requests.reject');
 
     Route::resource('plans', AdminPlanController::class)->except(['show']);
+    Route::get('/teacher-plans', [AdminTeacherController::class, 'index'])->name('teacher-plans.index');
+    Route::post('/teacher-plans/{userId}/remove', [AdminTeacherController::class, 'removePlan'])->name('teacher-plans.remove');
+    Route::post('/teacher-plans/{userId}/extend', [AdminTeacherController::class, 'extendPlan'])->name('teacher-plans.extend');
+    Route::post('/teacher-plans/{userId}/update', [AdminTeacherController::class, 'updatePlan'])->name('teacher-plans.update');
+
+
 });
 
 Route::get('/', function () {

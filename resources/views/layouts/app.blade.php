@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +7,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <header class="navbar">
-        <div class="nav-wrap container">
-            <p class="brand">Teacher</p>
+<body class="bg-gray-50 text-gray-800">
+    {{-- ===== HEADER / NAVBAR ===== --}}
+    <header class="sticky top-0 bg-white border-b shadow-sm z-40">
+        <div class="container mx-auto flex items-center justify-between py-3 px-4">
+            <p class="text-xl font-semibold text-indigo-600">Teacher</p>
 
-            <div style="display:flex;gap:10px;align-items:center;position:relative">
-                {{-- Tombol New Listing --}}
-                <button class="btn primary" type="button" id="openCreateListing">+ New Listing</button>
+            <div class="flex items-center gap-3 relative">
+                {{-- (Removed + New Listing button here) --}}
 
                 @php
                     $user = auth()->guard('web')->user();
@@ -26,42 +25,34 @@
                             : asset('images/default-avatar.png');
                 @endphp
 
-                {{-- AVATAR BUTTON (toggle dropdown) --}}
+                {{-- Avatar (Dropdown Toggle) --}}
                 <button id="avatarBtn" type="button" aria-haspopup="true" aria-expanded="false"
-                    style="border:none;background:transparent;padding:0;cursor:pointer">
-                    <img src="{{ $img }}" alt="Foto Profil" width="36" height="36"
-                        class="rounded-full object-cover h-10 w-10">
+                    class="focus:outline-none">
+                    <img src="{{ $img }}" alt="Foto Profil"
+                        class="h-10 w-10 rounded-full object-cover ring-2 ring-indigo-500">
                 </button>
 
-                {{-- DROPDOWN MENU --}}
-                <div id="profileMenu" role="menu" aria-labelledby="avatarBtn" hidden
-                    style="position:absolute; top:48px; right:0; min-width:240px; background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 10px 20px rgba(0,0,0,.08); padding:10px; z-index:50">
-                    <div
-                        style="display:flex; gap:10px; align-items:center; padding:8px 8px 10px 8px; border-bottom:1px solid #f3f4f6">
-                        <img src="{{ $img }}" alt="" width="40" height="40"
-                            class="rounded-full object-cover h-10 w-10">
-                        <div style="min-width:0">
-                            <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $user?->name ?? 'Pengguna' }}
-                            </div>
-                            <div
-                                style="font-size:12px; color:#6b7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $user?->email ?? '' }}
-                            </div>
+                {{-- Dropdown --}}
+                <div id="profileMenu" hidden
+                    class="absolute top-12 right-0 bg-white border border-gray-200 rounded-xl shadow-lg w-60 animate-fade-in">
+                    <div class="flex items-center gap-3 p-3 border-b">
+                        <img src="{{ $img }}" alt="" class="h-10 w-10 rounded-full">
+                        <div class="min-w-0">
+                            <div class="font-semibold truncate">{{ $user?->name ?? 'Pengguna' }}</div>
+                            <div class="text-sm text-gray-500 truncate">{{ $user?->email ?? '' }}</div>
                         </div>
                     </div>
 
-                    <div style="display:flex; flex-direction:column; padding:6px">
-                        <a href="{{ route('teacher.profile.edit') }}" class="btn"
-                            style="text-align:left; padding:8px 10px; border-radius:8px; text-decoration:none; color:#111827;">
+                    <div class="p-2 space-y-1">
+                        <a href="{{ route('teacher.profile.edit') }}"
+                            class="block px-3 py-2 text-sm rounded-md hover:bg-gray-100">
                             🧑‍🏫 Profil
                         </a>
 
-                        {{-- Logout form (POST) --}}
-                        <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="margin-top:6px">
+                        <form id="logoutForm" action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn"
-                                style="width:100%; text-align:left; padding:8px 10px; border-radius:8px; background:#ef4444; color:#fff;">
+                            <button type="submit"
+                                class="w-full text-left px-3 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600 transition">
                                 ⎋ Logout
                             </button>
                         </form>
@@ -71,36 +62,33 @@
         </div>
     </header>
 
-
-    <main class="container">
+    {{-- ===== MAIN CONTENT ===== --}}
+    <main class="container mx-auto px-4 py-6">
         @yield('content')
     </main>
 
-    {{-- ===== Create Listing Modal ===== --}}
+    {{-- ===== CREATE LISTING MODAL ===== --}}
     <div id="create-listing-modal" class="modal-backdrop" hidden aria-hidden="true">
         <div class="modal-scrim" data-close="create-listing-modal"></div>
-
-        <div class="modal-card card pad" role="dialog" aria-modal="true" aria-labelledby="create-title">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                <h2 id="create-title" class="h2" style="margin:0">Buat Listing</h2>
+        <div class="modal-card card pad bg-white p-6 rounded-xl shadow-xl w-full max-w-2xl"
+            role="dialog" aria-modal="true" aria-labelledby="create-title">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="create-title" class="text-lg font-semibold">Buat Listing</h2>
                 <button class="btn" type="button" data-close="create-listing-modal">Tutup</button>
             </div>
-
             <div id="create-listing-body">
-                <div class="muted">Memuat formulir…</div>
+                <div class="text-gray-500 text-sm">Memuat formulir…</div>
             </div>
         </div>
     </div>
 
-    {{-- ===== Upgrade Modal (already used by <x-plan-banner>) ===== --}}
+    {{-- ===== UPGRADE MODAL (used by plan banner) ===== --}}
 
-
-    {{-- ===== JS for both modals & form fetch ===== --}}
+    {{-- ===== JS (Modal + Dropdown) ===== --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const qs = s => document.querySelector(s);
 
-            // helpers
             const openModal = id => {
                 const m = qs('#' + id);
                 if (m) {
@@ -125,13 +113,13 @@
                 });
             });
 
-            // Open Upgrade modal when buttons have data-open="upgrade-modal"
+            // Upgrade modal trigger
             document.querySelectorAll('[data-open="upgrade-modal"]').forEach(b => {
                 b.addEventListener('click', () => openModal('upgrade-modal'));
             });
             if (location.hash === '#upgrade') openModal('upgrade-modal');
 
-            // Open Create Listing modal and lazy-load /listings/create
+            // Create Listing modal (still works from dashboard)
             const openBtn = qs('#openCreateListing');
             const modalBody = qs('#create-listing-body');
 
@@ -139,116 +127,90 @@
                 openBtn.addEventListener('click', async () => {
                     openModal('create-listing-modal');
 
-                    // Fetch once per page load
-                    // Fetch once per page load
                     if (!modalBody.dataset.loaded) {
                         try {
                             const res = await fetch("{{ route('listings.create') }}", {
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                }
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
                             });
                             const html = await res.text();
-
                             const temp = document.createElement('div');
                             temp.innerHTML = html;
-
-                            // === Cari form listing secara spesifik (bukan form logout) ===
                             let form = Array.from(temp.querySelectorAll('form')).find(f =>
                                 f.querySelector('input[name="title"]') &&
-                                (f.querySelector('input[name="category"]') || f.querySelector(
-                                    'select[name="category"]')) &&
+                                (f.querySelector('input[name="category"]') || f.querySelector('select[name="category"]')) &&
                                 f.querySelector('select[name="region_id"]') &&
                                 f.querySelector('textarea[name="description"]')
                             );
-
-                            // Fallback 1: form dengan action mengarah ke /listings (store/update)
                             if (!form) {
-                                form = Array.from(temp.querySelectorAll('form')).find(f => {
-                                    const action = (f.getAttribute('action') || '')
-                                        .toLowerCase();
-                                    return action.includes('/listings') && !action.includes(
-                                        '/logout');
-                                });
+                                const forms = Array.from(temp.querySelectorAll('form')).filter(f => !(f.getAttribute('action') || '').toLowerCase().includes('/logout'));
+                                form = forms.sort((a, b) => b.innerHTML.length - a.innerHTML.length)[0];
                             }
-
-                            // Fallback 2: ambil form terpanjang yang bukan logout
                             if (!form) {
-                                const forms = Array.from(temp.querySelectorAll('form')).filter(f => {
-                                    const action = (f.getAttribute('action') || '')
-                                        .toLowerCase();
-                                    return !action.includes('/logout');
-                                });
-                                form = forms.sort((a, b) => (b.innerHTML.length - a.innerHTML.length))[
-                                    0];
-                            }
-
-                            if (!form) {
-                                modalBody.innerHTML =
-                                    '<div class="muted" style="color:#b91c1c">Form listing tidak ditemukan.</div>';
+                                modalBody.innerHTML = '<div class="text-red-600 text-sm">Form listing tidak ditemukan.</div>';
                                 return;
                             }
-
                             modalBody.innerHTML = '';
                             modalBody.appendChild(form.cloneNode(true));
                             modalBody.dataset.loaded = '1';
                         } catch (e) {
-                            modalBody.innerHTML =
-                                '<div class="muted" style="color:#b91c1c">Gagal memuat formulir.</div>';
+                            modalBody.innerHTML = '<div class="text-red-600 text-sm">Gagal memuat formulir.</div>';
                         }
                     }
-
                 });
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-
+            // Avatar dropdown
             const avatarBtn = document.getElementById('avatarBtn');
             const profileMenu = document.getElementById('profileMenu');
-
-            function openMenu() {
-                profileMenu.hidden = false;
-                avatarBtn.setAttribute('aria-expanded', 'true');
-            }
-
-            function closeMenu() {
-                profileMenu.hidden = true;
-                avatarBtn.setAttribute('aria-expanded', 'false');
-            }
-
             function toggleMenu() {
-                profileMenu.hidden ? openMenu() : closeMenu();
+                if (profileMenu.hidden) {
+                    profileMenu.hidden = false;
+                    avatarBtn.setAttribute('aria-expanded', 'true');
+                } else {
+                    profileMenu.hidden = true;
+                    avatarBtn.setAttribute('aria-expanded', 'false');
+                }
             }
 
             if (avatarBtn && profileMenu) {
-                // Toggle on click
-                avatarBtn.addEventListener('click', (e) => {
+                avatarBtn.addEventListener('click', e => {
                     e.stopPropagation();
                     toggleMenu();
                 });
-
-                // Click-away close
-                document.addEventListener('click', (e) => {
-                    if (!profileMenu.hidden) {
-                        const clickInsideMenu = profileMenu.contains(e.target);
-                        const clickOnButton = avatarBtn.contains(e.target);
-                        if (!clickInsideMenu && !clickOnButton) {
-                            closeMenu();
-                        }
+                document.addEventListener('click', e => {
+                    if (!profileMenu.hidden && !profileMenu.contains(e.target) && !avatarBtn.contains(e.target)) {
+                        profileMenu.hidden = true;
                     }
                 });
-
-                // Esc to close
-                document.addEventListener('keydown', (e) => {
+                document.addEventListener('keydown', e => {
                     if (e.key === 'Escape' && !profileMenu.hidden) {
-                        closeMenu();
+                        profileMenu.hidden = true;
                         avatarBtn.focus();
                     }
                 });
             }
         });
     </script>
-</body>
 
+    {{-- ===== Basic styling tweaks ===== --}}
+    <style>
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in .15s ease-out;
+        }
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+        }
+    </style>
+</body>
 </html>
