@@ -50,4 +50,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function userPlans()
+{
+    return $this->hasMany(\App\Models\UserPlan::class, 'user_id');
+}
+
 }

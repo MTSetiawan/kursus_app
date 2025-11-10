@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\Plan;
 use App\Models\Region;
+use App\Models\UserPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -21,7 +23,36 @@ class ListingController extends Controller
     public function index()
     {
         $listing = Listing::with('region')->where('user_id', auth()->id())->latest()->paginate(10);
-        return view('listings.index', compact('listing'));
+        $listings = Listing::with('region')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
+
+        $activePlan = UserPlan::with('plan')
+            ->where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->whereDate('end_date', '>=', now()->toDateString())
+            ->latest()
+            ->first();
+
+        $planName = $activePlan?->plan?->name ?? 'bronze';
+        $limit    = $activePlan?->plan?->quota_region ?? 3;
+        $endDate    = $activePlan?->end_date;
+        $used     = Listing::where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->count();
+
+        $plans = Plan::orderBy('price')->get();
+
+        return view('teacher.dashboard', compact(
+            'listings',
+            'planName',
+            'limit',
+            'used',
+            'plans',
+            'activePlan',
+            'endDate'
+        ));
     }
 
     /**
@@ -29,14 +60,18 @@ class ListingController extends Controller
      */
     public function create(Request $request)
     {
-        $cities = Region::where('type', 'kota')->orderBy('name')->get();
-        $selectedCity = $request->get('city');
-        $districts = collect();
-        if ($selectedCity) {
-            $districts = Region::where('type', 'kecamatan')->where('parent_id', $selectedCity)->orderBy('name')->get();
-        }
-        return view('listings.create', compact('cities', 'districts', 'selectedCity'));
+        $regions = Region::where('type', 'kecamatan')
+            ->orderBy('name')
+            ->get();
+
+        $listing = new Listing();
+
+        // Kalau view juga butuh dropdown kota (opsional)
+        // $cities = Region::where('type','kota')->orderBy('name')->get();
+
+        return view('listings.create', compact('regions', 'listing')); // , 'cities'
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -80,8 +115,20 @@ class ListingController extends Controller
 
         Listing::create($data);
 
-        return redirect()->route('listings.index')->with('succes', 'Listing berhasil dibuat');
+        return redirect()->route('teacher.dashboard')->with('succes', 'Listing berhasil dibuat');
     }
+
+    public function edit(Listing $listing)
+    {
+        abort_unless($listing->user_id === auth()->id(), 403);
+
+        $regions = Region::where('type', 'kecamatan')
+            ->orderBy('name')
+            ->get();
+
+        return view('listings.create', compact('listing', 'regions'));
+    }
+
 
     /**
      * Update the specified resource in storage.

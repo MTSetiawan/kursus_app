@@ -1,25 +1,26 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+@extends('layouts.auth')
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@section('content')
+<h1 class="h1" style="text-align:center">Lupa Password</h1>
+<p class="muted" style="text-align:center;margin-bottom:8px">
+  Masukkan email untuk menerima link reset.
+</p>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
+@if (session('status'))
+  <div class="card pad" style="margin:8px 0;background:var(--sky-50)">{{ session('status') }}</div>
+@endif
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+<form method="POST" action="{{ route('password.email') }}" style="display:grid;gap:12px">
+  @csrf
+  <div>
+    <label class="muted" style="font-size:12px">Email</label>
+    <input class="input" type="email" name="email" value="{{ old('email') }}" required autofocus>
+    @error('email') <div class="muted" style="color:#b91c1c">{{ $message }}</div> @enderror
+  </div>
+  <button class="btn primary block">Kirim Link Reset</button>
+</form>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+<p class="muted" style="text-align:center;margin-top:10px">
+  <a href="{{ route('login') }}" style="color:var(--primary)">Kembali ke Login</a>
+</p>
+@endsection
